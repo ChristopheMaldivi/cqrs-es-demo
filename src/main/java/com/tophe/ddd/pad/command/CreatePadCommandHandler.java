@@ -1,9 +1,10 @@
 package com.tophe.ddd.pad.command;
 
+import com.tophe.ddd.commands.CommandHandler;
 import com.tophe.ddd.pad.domain.Pad;
 import com.tophe.ddd.pad.infrastructure.PadRepository;
 
-public class CreatePadCommandHandler {
+public class CreatePadCommandHandler extends CommandHandler<CreatePadCommand,String> {
 
   private final PadRepository padRepository;
 
@@ -11,6 +12,7 @@ public class CreatePadCommandHandler {
     this.padRepository = padRepository;
   }
 
+  @Override
   public CommandResponse<String> handle(CreatePadCommand command) {
     Pad pad = Pad.createEmptyPad();
     Pad savedPad = padRepository.save(pad);

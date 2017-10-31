@@ -11,7 +11,7 @@ public class PadShould {
     Pad pad = Pad.createEmptyPad();
 
     // then
-    Assertions.assertThat(pad.id).isEqualTo("not saved yet");
+    Assertions.assertThat(pad.id).isEmpty();
     Assertions.assertThat(pad.text).isEmpty();
   }
 

@@ -1,4 +1,6 @@
 package com.tophe.ddd.pad.command;
 
-public class CreatePadCommand {
+import com.tophe.ddd.commands.Command;
+
+public class CreatePadCommand implements Command {
 }
