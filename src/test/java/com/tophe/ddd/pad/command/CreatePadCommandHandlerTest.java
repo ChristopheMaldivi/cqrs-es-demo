@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CreatePadCommandHandlerShould {
+public class CreatePadCommandHandlerTest {
 
   @Test
   public void create_an_empty_pad() {

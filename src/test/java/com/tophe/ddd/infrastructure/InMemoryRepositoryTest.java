@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InMemoryRepositoryShould {
+public class InMemoryRepositoryTest {
 
   private InMemoryRepository<Pojo, String> repo;
 
@@ -64,7 +64,7 @@ public class InMemoryRepositoryShould {
     Optional<Pojo> foundPojo = repo.findById(pojo.id);
 
     // then
-    assertThat(foundPojo).isPresent();
+    assertThat(foundPojo.isPresent()).isTrue();
     assertThat(foundPojo.get().id).isEqualTo(pojo.id);
   }
 

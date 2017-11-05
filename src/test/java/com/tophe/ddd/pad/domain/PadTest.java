@@ -3,7 +3,7 @@ package com.tophe.ddd.pad.domain;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-public class PadShould {
+public class PadTest {
 
   @Test
   public void create_empty_pad() {

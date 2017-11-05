@@ -6,7 +6,7 @@ import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-public class CommandBusShould {
+public class CommandBusTest {
 
   private class FakeCommand1 implements Command {
   }
