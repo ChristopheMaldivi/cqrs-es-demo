@@ -1,3 +1,5 @@
+https://travis-ci.org/ChristopheMaldivi/ddd-demo.svg?branch=master
+
 # ddd-demo
 
 DDD demo implementation:
