@@ -1,6 +1,5 @@
 package com.tophe.ddd.commands;
 
-import com.tophe.ddd.pad.command.CommandResponse;
 import com.tophe.ddd.pad.command.CreatePadCommand;
 import com.tophe.ddd.pad.command.CreatePadCommandHandler;
 import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;

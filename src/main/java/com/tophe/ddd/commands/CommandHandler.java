@@ -1,7 +1,5 @@
 package com.tophe.ddd.commands;
 
-import com.tophe.ddd.pad.command.CommandResponse;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;

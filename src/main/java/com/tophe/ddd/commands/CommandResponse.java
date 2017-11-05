@@ -1,4 +1,4 @@
-package com.tophe.ddd.pad.command;
+package com.tophe.ddd.commands;
 
 import java.util.Optional;
 
