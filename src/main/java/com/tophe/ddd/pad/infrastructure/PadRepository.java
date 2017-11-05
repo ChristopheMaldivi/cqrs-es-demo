@@ -1,8 +1,8 @@
 package com.tophe.ddd.pad.infrastructure;
 
+import com.tophe.ddd.infrastructure.Repository;
 import com.tophe.ddd.pad.domain.Pad;
-import org.springframework.data.repository.CrudRepository;
 
-public interface PadRepository extends CrudRepository<Pad, String> {
+public interface PadRepository extends Repository<Pad, String> {
 
 }
