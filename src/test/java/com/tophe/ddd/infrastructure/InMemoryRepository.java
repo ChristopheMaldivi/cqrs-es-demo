@@ -5,23 +5,22 @@ import java.util.*;
 
 /**
  * In memory repository useful for tests purpose
- * Should support Long ID but it is not completely tested in this case
+ * Should support Long AggregateId but it is not completely tested in this case
  */
-public class InMemoryRepository<T, ID> implements Repository<T, ID> {
+public class InMemoryRepository<AggregateRoot, AggregateId> implements Repository<AggregateRoot, AggregateId> {
 
-  // NB: only support String id
-  private final Map<ID, T> map = new HashMap<>();
+  private final Map<AggregateId, AggregateRoot> map = new HashMap<>();
 
   @Override
-  public <S extends T> S save(S entity) {
-    Optional<ID> field = retrieveEntityIdField(entity);
+  public <S extends AggregateRoot> S save(S aggregate) {
+    Optional<AggregateId> field = retrieveEntityIdField(aggregate);
     return field
-      .flatMap(id -> doSaveEntity(id, entity))
-      .orElseThrow(() -> new IllegalStateException("Failed to retrieve the ID field in entity: " + entity.toString()));
+      .flatMap(id -> doSaveAggregate(id, aggregate))
+      .orElseThrow(() -> new IllegalStateException("Failed to retrieve the AggregateId field in aggregate: " + aggregate.toString()));
   }
 
-  private <S extends T> Optional<S> doSaveEntity(ID id, S entity) {
-    ID saveId = id;
+  private <S extends AggregateRoot> Optional<S> doSaveAggregate(AggregateId id, S entity) {
+    AggregateId saveId = id;
     if (!map.containsKey(id)) {
       saveId = buildNewId(id);
       forceUpdateEntityId(saveId, entity);
@@ -31,25 +30,25 @@ public class InMemoryRepository<T, ID> implements Repository<T, ID> {
   }
 
   @Override
-  public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
+  public <S extends AggregateRoot> Iterable<S> saveAll(Iterable<S> entities) {
     List<S> savedEntities = new ArrayList<>();
     entities.forEach(entity -> savedEntities.add(save(entity)));
     return savedEntities;
   }
 
   @Override
-  public Optional<T> findById(ID id) {
+  public Optional<AggregateRoot> findById(AggregateId id) {
     return map.containsKey(id) ? Optional.of(map.get(id)) : Optional.empty();
   }
 
   @Override
-  public Iterable<T> findAll() {
+  public Iterable<AggregateRoot> findAll() {
     return map.values();
   }
 
   @Override
-  public Iterable<T> findAllById(Iterable<ID> ids) {
-    List<T> list = new ArrayList<>();
+  public Iterable<AggregateRoot> findAllById(Iterable<AggregateId> ids) {
+    List<AggregateRoot> list = new ArrayList<>();
     ids.forEach(id -> {
       if (map.containsKey(id)) {
         list.add(map.get(id));
@@ -59,19 +58,19 @@ public class InMemoryRepository<T, ID> implements Repository<T, ID> {
   }
 
   @Override
-  public void deleteById(ID id) {
+  public void deleteById(AggregateId id) {
     map.remove(id);
   }
 
   @Override
-  public void delete(T entity) {
+  public void delete(AggregateRoot entity) {
     if (map.containsValue(entity)) {
       map.remove(retrieveEntityIdField(entity).get());
     }
   }
 
   @Override
-  public void deleteAll(Iterable<? extends T> entities) {
+  public void deleteAll(Iterable<? extends AggregateRoot> entities) {
     entities.forEach(this::delete);
   }
 
@@ -80,12 +79,12 @@ public class InMemoryRepository<T, ID> implements Repository<T, ID> {
     map.clear();
   }
 
-  private <S extends T> Optional<ID> retrieveEntityIdField(S entity) {
+  private <S extends AggregateRoot> Optional<AggregateId> retrieveEntityIdField(S entity) {
     Field f;
     try {
       f = entity.getClass().getDeclaredField("id");
       f.setAccessible(true);
-      ID id = (ID) f.get(entity);
+      AggregateId id = (AggregateId) f.get(entity);
       id = id == null ? emptyID(f.getType()) : id;
       return Optional.of(id);
     } catch (NoSuchFieldException e) {
@@ -95,7 +94,7 @@ public class InMemoryRepository<T, ID> implements Repository<T, ID> {
     }
   }
 
-  private <S extends T> void forceUpdateEntityId(ID id, S entity) {
+  private <S extends AggregateRoot> void forceUpdateEntityId(AggregateId id, S entity) {
     Field f;
     try {
       f = entity.getClass().getDeclaredField("id");
@@ -106,21 +105,21 @@ public class InMemoryRepository<T, ID> implements Repository<T, ID> {
     }
   }
 
-  private ID buildNewId(ID id) {
+  private AggregateId buildNewId(AggregateId id) {
     if (id instanceof String) {
-      return (ID) (map.size() + "");
+      return (AggregateId) (map.size() + "");
     } else if (id instanceof Long) {
-      return (ID) new Long(0);
+      return (AggregateId) new Long(0);
     }
-    throw new IllegalStateException("Unsupported ID type: " + id.getClass().toString());
+    throw new IllegalStateException("Unsupported AggregateId type: " + id.getClass().toString());
   }
 
-  private ID emptyID(Class<?> clazz) {
+  private AggregateId emptyID(Class<?> clazz) {
     if (clazz.getSimpleName().equals("String")) {
-      return (ID) "";
+      return (AggregateId) "";
     } else if (clazz.getSimpleName().equals("Long")) {
-      return (ID) new Long(-1);
+      return (AggregateId) new Long(-1);
     }
-    throw new IllegalStateException("Unsupported ID type: " + clazz.getName());
+    throw new IllegalStateException("Unsupported AggregateId type: " + clazz.getName());
   }
 }

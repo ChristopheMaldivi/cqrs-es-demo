@@ -2,23 +2,23 @@ package com.tophe.ddd.infrastructure;
 
 import java.util.Optional;
 
-public interface Repository <T, ID> {
+public interface Repository <AggregateRoot, AggregateId> {
 
-  <S extends T> S save(S entity);
+  <S extends AggregateRoot> S save(S entity);
 
-  <S extends T> Iterable<S> saveAll(Iterable<S> entities);
+  <S extends AggregateRoot> Iterable<S> saveAll(Iterable<S> entities);
 
-  Optional<T> findById(ID id);
+  Optional<AggregateRoot> findById(AggregateId id);
 
-  Iterable<T> findAll();
+  Iterable<AggregateRoot> findAll();
 
-  Iterable<T> findAllById(Iterable<ID> ids);
+  Iterable<AggregateRoot> findAllById(Iterable<AggregateId> ids);
 
-  void deleteById(ID id);
+  void deleteById(AggregateId id);
 
-  void delete(T entity);
+  void delete(AggregateRoot entity);
 
-  void deleteAll(Iterable<? extends T> entities);
+  void deleteAll(Iterable<? extends AggregateRoot> entities);
 
   void deleteAll();
 }
