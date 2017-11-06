@@ -1,4 +1,6 @@
 package com.tophe.ddd.commands;
 
-public interface Command {
+import com.tophe.ddd.bus.BusElem;
+
+public interface Command extends BusElem {
 }

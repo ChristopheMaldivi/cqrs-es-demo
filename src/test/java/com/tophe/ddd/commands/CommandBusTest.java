@@ -1,5 +1,6 @@
 package com.tophe.ddd.commands;
 
+import com.tophe.ddd.bus.NoBusHandlerFound;
 import com.tophe.ddd.pad.command.CreatePadCommand;
 import com.tophe.ddd.pad.command.CreatePadCommandHandler;
 import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;
@@ -68,17 +69,14 @@ public class CommandBusTest {
     Assertions.assertThat(response.value.isPresent()).isTrue();
   }
 
-  @Test
+  @Test(expected = NoBusHandlerFound.class)
   public void dispatch_without_registered_handlers_and_receives_empty_response() {
     // given
     CreatePadCommand createPadCommand = new CreatePadCommand();
     CommandBus commandBus = new CommandBus();
 
     // when
-    CommandResponse<String> response = commandBus.dispatch(createPadCommand);
-
-    // then
-    Assertions.assertThat(response.value.isPresent()).isFalse();
+    commandBus.dispatch(createPadCommand);
   }
 
   private class FakeCommandHandler1 extends CommandHandler<FakeCommand1, String> {
