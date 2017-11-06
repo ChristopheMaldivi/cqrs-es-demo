@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Bus <T extends BusHandler, E extends BusElem> {
+public abstract class Bus <T extends BusHandler, E extends BusElem> {
   private final List<T> handlers = new ArrayList<>();
 
   public void register(T... handlers) {

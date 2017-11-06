@@ -1,14 +1,16 @@
 package com.tophe.ddd.bus;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Before;
 import org.junit.Test;
 
 public class BusTest {
 
-  private class FakeBusElem1 implements BusElem {
-  }
+  TestBus bus;
 
-  private class FakeBusElem2 implements BusElem {
+  @Before
+  public void setUp() throws Exception {
+    bus = new TestBus();
   }
 
   @Test
@@ -16,7 +18,6 @@ public class BusTest {
     // given
     FakeBusElem1 fakeBusElem1 = new FakeBusElem1();
     FakeBusHandler1 handler = new FakeBusHandler1();
-    Bus bus = new Bus();
 
     // when
     bus.register(handler);
@@ -33,7 +34,6 @@ public class BusTest {
     FakeBusElem2 fakeBusElem2 = new FakeBusElem2();
     FakeBusHandler1 handler1 = new FakeBusHandler1();
     FakeBusHandler2 handler2 = new FakeBusHandler2();
-    Bus bus = new Bus();
     bus.register(handler1, handler2);
 
     // when
@@ -55,7 +55,6 @@ public class BusTest {
     // given
     FakeBusElem1 fakeBusElem1 = new FakeBusElem1();
     FakeBusHandler1 handler = new FakeBusHandler1();
-    Bus bus = new Bus();
 
     // when
     bus.register(handler);
@@ -69,28 +68,36 @@ public class BusTest {
   @Test(expected = NoBusHandlerFound.class)
   public void dispatch_without_registered_handlers_and_receives_empty_response() {
     FakeBusElem1 fakeBusElem1 = new FakeBusElem1();
-    Bus bus = new Bus();
 
     // when
     bus.dispatch(fakeBusElem1);
   }
 
+
   private class FakeBusHandler1 extends BusHandler<FakeBusElem1, String, BusResponse<String>> {
     public boolean executed;
-
     @Override
     public BusResponse<String> handle(FakeBusElem1 busElem) {
       executed = true;
       return new BusResponse<>("fake response 1");
     }
   }
+
   private class FakeBusHandler2 extends BusHandler<FakeBusElem2, String, BusResponse<String>> {
     public boolean executed;
-
     @Override
     public BusResponse<String> handle(FakeBusElem2 busElem) {
       executed = true;
       return new BusResponse<>("fake response 2");
     }
+  }
+
+  private class FakeBusElem1 implements BusElem {
+  }
+
+  private class FakeBusElem2 implements BusElem {
+  }
+
+  private class TestBus extends Bus<BusHandler, BusElem> {
   }
 }
