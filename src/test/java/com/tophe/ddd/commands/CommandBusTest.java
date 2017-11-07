@@ -7,6 +7,8 @@ import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class CommandBusTest {
 
   private class FakeCommand1 implements Command {
@@ -66,17 +68,22 @@ public class CommandBusTest {
     CommandResponse<String> response = commandBus.dispatch(createPadCommand);
 
     // then
-    Assertions.assertThat(response.value.isPresent()).isTrue();
+    Assertions.assertThat(response.success()).isTrue();
+    Assertions.assertThat(response.value()).isEqualTo("0");
   }
 
-  @Test(expected = NoBusHandlerFound.class)
-  public void dispatch_without_registered_handlers_and_receives_empty_response() {
+  @Test
+  public void dispatch_without_registered_handlers_and_receives_failure_response() {
     // given
     CreatePadCommand createPadCommand = new CreatePadCommand();
     CommandBus commandBus = new CommandBus();
 
     // when
-    commandBus.dispatch(createPadCommand);
+    CommandResponse<String> response = commandBus.dispatch(createPadCommand);
+
+    // then
+    assertThat(response.success()).isFalse();
+    assertThat(response.failureCause().getClass()).isAssignableFrom(NoBusHandlerFound.class);
   }
 
   private class FakeCommandHandler1 extends CommandHandler<FakeCommand1, String> {

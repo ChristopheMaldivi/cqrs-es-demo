@@ -1,15 +1,27 @@
 package com.tophe.ddd.bus;
 
-import java.util.Optional;
+import io.vavr.control.Try;
 
 public class BusResponse<T> {
-  public final Optional<T> value;
+  private final Try<T> value;
 
   public BusResponse(T t) {
-    this.value = Optional.ofNullable(t);
+    this.value = Try.success(t);
   }
 
-  public static BusResponse empty() {
-    return new BusResponse(null);
+  public BusResponse(RuntimeException e) {
+    this.value = Try.failure(e);
+  }
+
+  public boolean success() {
+    return value.isSuccess();
+  }
+
+  public T value() {
+    return value.get();
+  }
+
+  public Throwable failureCause() {
+    return value.getCause();
   }
 }

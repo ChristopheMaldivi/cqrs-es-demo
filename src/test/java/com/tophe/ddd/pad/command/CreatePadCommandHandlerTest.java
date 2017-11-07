@@ -21,9 +21,9 @@ public class CreatePadCommandHandlerTest {
     CommandResponse<String> response = handler.handle(command);
 
     // then
-    assertThat(response.value.isPresent()).isTrue();
+    assertThat(response.success()).isTrue();
     assertThat(padRepository.findAll()).hasSize(1);
     Pad pad = padRepository.findAll().iterator().next();
-    assertThat(response.value.get()).isEqualTo(pad.id);
+    assertThat(response.value()).isEqualTo(pad.id);
   }
 }

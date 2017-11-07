@@ -17,7 +17,7 @@ public class GetPadQueryHandler extends QueryHandler<GetPadQuery, Optional<Pad>>
 
   @Override
   public QueryResponse<Optional<Pad>> handle(GetPadQuery query) {
-    return new QueryResponse<>(
+    return new QueryResponse(
       padRepository
         .findById(query.padId)
     );

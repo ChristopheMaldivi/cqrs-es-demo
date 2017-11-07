@@ -15,9 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetPadQueryHandlerTest {
 
-  // FIXME: QueryResponse / OPtional issue
-
-
   @Test
   public void query_returns_empty_result_for_an_unknown_pad_id() {
     // given
@@ -29,7 +26,8 @@ public class GetPadQueryHandlerTest {
     QueryResponse<Optional<Pad>> response = queryHandler.handle(getPadQuery);
 
     // then
-    assertThat(response.value.get().isPresent()).isFalse();
+    assertThat(response.success()).isTrue();
+    assertThat(response.value().isPresent()).isFalse();
   }
 
   @Test
@@ -39,7 +37,7 @@ public class GetPadQueryHandlerTest {
     CreatePadCommandHandler cmdHandler = new CreatePadCommandHandler(padRepository);
     CommandResponse<String> cmdResponse = cmdHandler.handle(new CreatePadCommand());
 
-    String padId = cmdResponse.value.get();
+    String padId = cmdResponse.value();
     GetPadQuery getPadQuery = new GetPadQuery(padId);
     GetPadQueryHandler queryHandler = new GetPadQueryHandler(padRepository);
 
@@ -47,7 +45,8 @@ public class GetPadQueryHandlerTest {
     QueryResponse<Optional<Pad>> response = queryHandler.handle(getPadQuery);
 
     // then
-    assertThat(response.value.get().isPresent()).isTrue();
-    assertThat(response.value.get().get().id).isEqualTo(padId);
+    assertThat(response.success()).isTrue();
+    assertThat(response.value().isPresent()).isTrue();
+    assertThat(response.value().get().id).isEqualTo(padId);
   }
 }

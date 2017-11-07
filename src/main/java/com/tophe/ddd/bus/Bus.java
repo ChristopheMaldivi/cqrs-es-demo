@@ -16,6 +16,8 @@ public abstract class Bus <T extends BusHandler, E extends BusElem> {
       .filter(h -> h.supports(busElem))
       .findFirst()
       .map(h -> h.handle(busElem))
-      .orElseThrow(() -> new NoBusHandlerFound("bus element: " + busElem.toString()));
+      .orElseGet(() -> failed(new NoBusHandlerFound("bus element: " + busElem.toString())));
   }
+
+  protected abstract <R extends BusResponse> R failed(RuntimeException e);
 }

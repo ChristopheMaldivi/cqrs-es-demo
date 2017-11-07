@@ -5,7 +5,7 @@ import com.tophe.ddd.commands.CommandResponse;
 import com.tophe.ddd.pad.domain.Pad;
 import com.tophe.ddd.pad.infrastructure.PadRepository;
 
-public class CreatePadCommandHandler extends CommandHandler<CreatePadCommand,String> {
+public class CreatePadCommandHandler extends CommandHandler<CreatePadCommand, String> {
 
   private final PadRepository padRepository;
 
