@@ -1,5 +1,7 @@
 package com.tophe.ddd.infrastructure;
 
+import com.tophe.ddd.infrastructure.persistence.Repository;
+
 import java.lang.reflect.Field;
 import java.util.*;
 
