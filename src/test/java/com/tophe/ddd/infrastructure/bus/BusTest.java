@@ -1,5 +1,6 @@
 package com.tophe.ddd.infrastructure.bus;
 
+import io.vavr.control.Try;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -59,7 +60,7 @@ public class BusTest {
 
     // when
     bus.register(handler);
-    BusResponse<String> response = bus.dispatch(fakeBusElem1);
+    BusResponse<String, Try<String>> response = bus.dispatch(fakeBusElem1);
 
     // then
     assertThat(response.success()).isTrue();
@@ -75,25 +76,25 @@ public class BusTest {
 
     // then
     assertThat(response.success()).isFalse();
-    assertThat(response.failureCause().getClass()).isAssignableFrom(NoBusHandlerFound.class);
+    assertThat(response.failureCause()).contains(NoBusHandlerFound.class.getName());
   }
 
 
-  private class FakeBusHandler1 extends BusHandler<FakeBusElem1, String, BusResponse<String>> {
+  private class FakeBusHandler1 extends BusHandler<FakeBusElem1, String, BusResponse<String, Try<String>>> {
     public boolean executed;
     @Override
-    public BusResponse<String> handle(FakeBusElem1 busElem) {
+    public BusResponse<String, Try<String>> execute(FakeBusElem1 busElem) {
       executed = true;
-      return new BusResponse<>("fake response 1");
+      return new BusResponse<>(Try.of(() -> "fake response 1"));
     }
   }
 
-  private class FakeBusHandler2 extends BusHandler<FakeBusElem2, String, BusResponse<String>> {
+  private class FakeBusHandler2 extends BusHandler<FakeBusElem2, String, BusResponse<String, Try<String>>> {
     public boolean executed;
     @Override
-    public BusResponse<String> handle(FakeBusElem2 busElem) {
+    public BusResponse<String, Try<String>> execute(FakeBusElem2 busElem) {
       executed = true;
-      return new BusResponse<>("fake response 2");
+      return new BusResponse<>(Try.of(() -> "fake response 2"));
     }
   }
 
@@ -106,7 +107,7 @@ public class BusTest {
   private class TestBus extends Bus<BusHandler, BusElem> {
     @Override
     protected BusResponse failed(RuntimeException e) {
-      return new BusResponse(e);
+      return new BusResponse(Try.failure(e));
     }
   }
 }

@@ -1,9 +1,12 @@
-package com.tophe.ddd.pad.infrastructure.command;
+package com.tophe.ddd.pad.command;
 
-import com.tophe.ddd.infrastructure.commands.CommandHandler;
-import com.tophe.ddd.infrastructure.commands.CommandResponse;
+import com.tophe.ddd.commands.CommandHandler;
+import com.tophe.ddd.infrastructure.event.Event;
 import com.tophe.ddd.pad.domain.Pad;
 import com.tophe.ddd.pad.infrastructure.persistence.PadRepository;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
+import io.vavr.collection.List;
 
 public class CreatePadCommandHandler extends CommandHandler<CreatePadCommand, String> {
 
@@ -14,9 +17,9 @@ public class CreatePadCommandHandler extends CommandHandler<CreatePadCommand, St
   }
 
   @Override
-  public CommandResponse<String> handle(CreatePadCommand command) {
+  public Tuple2<String, List<Event>> doExecute(CreatePadCommand command) {
     Pad pad = Pad.createEmptyPad();
     Pad savedPad = padRepository.save(pad);
-    return new CommandResponse(savedPad.id);
+    return Tuple.of(savedPad._id, List.empty());
   }
 }

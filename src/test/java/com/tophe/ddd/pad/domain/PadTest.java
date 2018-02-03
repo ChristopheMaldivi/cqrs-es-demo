@@ -11,7 +11,7 @@ public class PadTest {
     Pad pad = Pad.createEmptyPad();
 
     // then
-    Assertions.assertThat(pad.id).isEmpty();
+    Assertions.assertThat(pad._id).isEmpty();
     Assertions.assertThat(pad.text).isEmpty();
   }
 

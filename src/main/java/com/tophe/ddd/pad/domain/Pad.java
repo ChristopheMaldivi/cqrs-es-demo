@@ -1,12 +1,12 @@
 package com.tophe.ddd.pad.domain;
 
 public class Pad {
-  public final String id;
+  public final String _id;
   public final String text;
 
-  private Pad(String id, String text) {
+  private Pad(String _id, String text) {
     this.text = text;
-    this.id = id;
+    this._id = _id;
   }
 
   public static Pad createEmptyPad() {
@@ -14,7 +14,7 @@ public class Pad {
   }
 
   public Pad updateText(String text) {
-    return new Pad(id, text);
+    return new Pad(_id, text);
   }
 
   public Pad updateId(String id) {

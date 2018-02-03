@@ -1,6 +1,6 @@
 package com.tophe.ddd.pad.infrastructure;
 
-import com.tophe.ddd.infrastructure.InMemoryRepository;
+import com.tophe.ddd.infrastructure.persistence.InMemoryRepository;
 import com.tophe.ddd.pad.domain.Pad;
 import com.tophe.ddd.pad.infrastructure.persistence.PadRepository;
 

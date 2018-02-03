@@ -1,10 +1,10 @@
-package com.tophe.ddd.infrastructure.queries;
+package com.tophe.ddd.queries;
 
 import com.tophe.ddd.infrastructure.bus.NoBusHandlerFound;
 import com.tophe.ddd.pad.domain.Pad;
 import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;
-import com.tophe.ddd.pad.infrastructure.query.GetPadQuery;
-import com.tophe.ddd.pad.infrastructure.query.GetPadQueryHandler;
+import com.tophe.ddd.pad.query.GetPadQuery;
+import com.tophe.ddd.pad.query.GetPadQueryHandler;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -84,25 +84,25 @@ public class QueryBusTest {
 
     // then
     assertThat(response.success()).isFalse();
-    assertThat(response.failureCause().getClass()).isAssignableFrom(NoBusHandlerFound.class);
+    assertThat(response.failureCause()).contains(NoBusHandlerFound.class.getName());
   }
 
   private class FakeQueryHandler1 extends QueryHandler<FakeQuery1, String> {
     public boolean executed;
 
     @Override
-    public QueryResponse<String> handle(FakeQuery1 query) {
+    public String doExecute(FakeQuery1 query) {
       executed = true;
-      return new QueryResponse<>("");
+      return "";
     }
   }
   private class FakeQueryHandler2 extends QueryHandler<FakeQuery2, String> {
     public boolean executed;
 
     @Override
-    public QueryResponse<String> handle(FakeQuery2 query) {
+    public String doExecute(FakeQuery2 query) {
       executed = true;
-      return new QueryResponse<>("");
+      return "";
     }
   }
 }

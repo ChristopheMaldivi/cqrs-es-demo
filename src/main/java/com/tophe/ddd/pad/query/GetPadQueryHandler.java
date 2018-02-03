@@ -1,9 +1,8 @@
-package com.tophe.ddd.pad.infrastructure.query;
+package com.tophe.ddd.pad.query;
 
 import com.tophe.ddd.pad.domain.Pad;
 import com.tophe.ddd.pad.infrastructure.persistence.PadRepository;
-import com.tophe.ddd.infrastructure.queries.QueryHandler;
-import com.tophe.ddd.infrastructure.queries.QueryResponse;
+import com.tophe.ddd.queries.QueryHandler;
 
 import java.util.Optional;
 
@@ -16,10 +15,7 @@ public class GetPadQueryHandler extends QueryHandler<GetPadQuery, Optional<Pad>>
   }
 
   @Override
-  public QueryResponse<Optional<Pad>> handle(GetPadQuery query) {
-    return new QueryResponse(
-      padRepository
-        .findById(query.padId)
-    );
+  public Optional<Pad> doExecute(GetPadQuery query) {
+    return padRepository.findById(query.padId);
   }
 }

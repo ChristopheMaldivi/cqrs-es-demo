@@ -1,9 +1,13 @@
-package com.tophe.ddd.infrastructure.commands;
+package com.tophe.ddd.commands;
 
 import com.tophe.ddd.infrastructure.bus.NoBusHandlerFound;
-import com.tophe.ddd.pad.infrastructure.command.CreatePadCommand;
-import com.tophe.ddd.pad.infrastructure.command.CreatePadCommandHandler;
+import com.tophe.ddd.infrastructure.event.Event;
+import com.tophe.ddd.pad.command.CreatePadCommand;
+import com.tophe.ddd.pad.command.CreatePadCommandHandler;
 import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
+import io.vavr.collection.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -83,25 +87,25 @@ public class CommandBusTest {
 
     // then
     assertThat(response.success()).isFalse();
-    assertThat(response.failureCause().getClass()).isAssignableFrom(NoBusHandlerFound.class);
+    assertThat(response.failureCause()).contains(NoBusHandlerFound.class.getName());
   }
 
   private class FakeCommandHandler1 extends CommandHandler<FakeCommand1, String> {
     public boolean executed;
 
     @Override
-    public CommandResponse<String> handle(FakeCommand1 command) {
+    public Tuple2<String, List<Event>> doExecute(FakeCommand1 command) {
       executed = true;
-      return new CommandResponse<>("");
+      return Tuple.of("", List.empty());
     }
   }
   private class FakeCommandHandler2 extends CommandHandler<FakeCommand2, String> {
     public boolean executed;
 
     @Override
-    public CommandResponse<String> handle(FakeCommand2 command) {
+    public Tuple2<String, List<Event>> doExecute(FakeCommand2 command) {
       executed = true;
-      return new CommandResponse<>("");
+      return Tuple.of("", List.empty());
     }
   }
 }

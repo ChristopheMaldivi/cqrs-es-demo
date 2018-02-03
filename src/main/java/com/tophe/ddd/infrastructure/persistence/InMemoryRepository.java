@@ -1,6 +1,4 @@
-package com.tophe.ddd.infrastructure;
-
-import com.tophe.ddd.infrastructure.persistence.Repository;
+package com.tophe.ddd.infrastructure.persistence;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -23,7 +21,7 @@ public class InMemoryRepository<AggregateRoot, AggregateId> implements Repositor
 
   private <S extends AggregateRoot> Optional<S> doSaveAggregate(AggregateId id, S entity) {
     AggregateId saveId = id;
-    if (!map.containsKey(id)) {
+    if (!map.containsKey(id) && isEmptyId(id, entity)) {
       saveId = buildNewId(id);
       forceUpdateEntityId(saveId, entity);
     }
@@ -82,9 +80,17 @@ public class InMemoryRepository<AggregateRoot, AggregateId> implements Repositor
   }
 
   private <S extends AggregateRoot> Optional<AggregateId> retrieveEntityIdField(S entity) {
-    Field f;
+    Field f = null;
     try {
-      f = entity.getClass().getDeclaredField("id");
+      Class<?> clazz = entity.getClass();
+      f = retrieveField(f, clazz, "_id");
+      if (f == null) {
+        f = retrieveField(f, clazz, "aggregateId");
+      }
+      if (f == null) {
+        throw new NoSuchFieldException();
+      }
+
       f.setAccessible(true);
       AggregateId id = (AggregateId) f.get(entity);
       id = id == null ? emptyID(f.getType()) : id;
@@ -96,10 +102,21 @@ public class InMemoryRepository<AggregateRoot, AggregateId> implements Repositor
     }
   }
 
+  private Field retrieveField(Field f, Class<?> clazz, String name) {
+    while (clazz != null && f == null) {
+      try {
+        f = clazz.getDeclaredField(name);
+      } catch (Exception e) {
+      }
+      clazz = clazz.getSuperclass();
+    }
+    return f;
+  }
+
   private <S extends AggregateRoot> void forceUpdateEntityId(AggregateId id, S entity) {
     Field f;
     try {
-      f = entity.getClass().getDeclaredField("id");
+      f = entity.getClass().getDeclaredField("_id");
       f.setAccessible(true);
       f.set(entity, id);
     } catch (NoSuchFieldException e) {
@@ -123,5 +140,13 @@ public class InMemoryRepository<AggregateRoot, AggregateId> implements Repositor
       return (AggregateId) new Long(-1);
     }
     throw new IllegalStateException("Unsupported AggregateId type: " + clazz.getName());
+  }
+
+  private <S extends AggregateRoot> boolean isEmptyId(AggregateId id, S entity) {
+    try {
+      return id.equals(emptyID(entity.getClass().getDeclaredField("_id").getType()));
+    } catch (NoSuchFieldException e) {
+      return true;
+    }
   }
 }

@@ -1,4 +1,4 @@
-package com.tophe.ddd.infrastructure.queries;
+package com.tophe.ddd.queries;
 
 import com.tophe.ddd.infrastructure.bus.BusElem;
 

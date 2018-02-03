@@ -1,4 +1,4 @@
-package com.tophe.ddd.infrastructure.commands;
+package com.tophe.ddd.commands;
 
 import com.tophe.ddd.infrastructure.bus.BusElem;
 

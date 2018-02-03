@@ -1,6 +1,6 @@
-package com.tophe.ddd.pad.infrastructure.command;
+package com.tophe.ddd.pad.command;
 
-import com.tophe.ddd.infrastructure.commands.CommandResponse;
+import com.tophe.ddd.commands.CommandResponse;
 import com.tophe.ddd.pad.domain.Pad;
 import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;
 import com.tophe.ddd.pad.infrastructure.persistence.PadRepository;
@@ -18,12 +18,12 @@ public class CreatePadCommandHandlerTest {
     CreatePadCommand command = new CreatePadCommand();
 
     // when
-    CommandResponse<String> response = handler.handle(command);
+    CommandResponse<String> response = handler.execute(command);
 
     // then
     assertThat(response.success()).isTrue();
     assertThat(padRepository.findAll()).hasSize(1);
     Pad pad = padRepository.findAll().iterator().next();
-    assertThat(response.value()).isEqualTo(pad.id);
+    assertThat(response.value()).isEqualTo(pad._id);
   }
 }

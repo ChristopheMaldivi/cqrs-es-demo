@@ -1,12 +1,14 @@
 package com.tophe.ddd.infrastructure.bus;
 
+import io.vavr.control.Try;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
-public abstract class BusHandler<T extends BusElem, V, R extends BusResponse<V>> {
+public abstract class BusHandler<T extends BusElem, V, R extends BusResponse<V, Try<V>>> {
 
-  public abstract R handle(T busElem);
+  public abstract R execute(T busElem);
 
   boolean supports(BusElem busElem) {
     Type t = getClass().getGenericSuperclass();

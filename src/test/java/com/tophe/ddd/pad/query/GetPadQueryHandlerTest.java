@@ -1,12 +1,12 @@
-package com.tophe.ddd.pad.infrastructure.query;
+package com.tophe.ddd.pad.query;
 
-import com.tophe.ddd.infrastructure.commands.CommandResponse;
-import com.tophe.ddd.pad.infrastructure.command.CreatePadCommand;
-import com.tophe.ddd.pad.infrastructure.command.CreatePadCommandHandler;
+import com.tophe.ddd.commands.CommandResponse;
+import com.tophe.ddd.pad.command.CreatePadCommand;
+import com.tophe.ddd.pad.command.CreatePadCommandHandler;
 import com.tophe.ddd.pad.domain.Pad;
 import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;
 import com.tophe.ddd.pad.infrastructure.persistence.PadRepository;
-import com.tophe.ddd.infrastructure.queries.QueryResponse;
+import com.tophe.ddd.queries.QueryResponse;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class GetPadQueryHandlerTest {
     GetPadQueryHandler queryHandler = new GetPadQueryHandler(new PadInMemoryRepository());
 
     // when
-    QueryResponse<Optional<Pad>> response = queryHandler.handle(getPadQuery);
+    QueryResponse<Optional<Pad>> response = queryHandler.execute(getPadQuery);
 
     // then
     assertThat(response.success()).isTrue();
@@ -35,18 +35,18 @@ public class GetPadQueryHandlerTest {
     // given
     PadRepository padRepository = new PadInMemoryRepository();
     CreatePadCommandHandler cmdHandler = new CreatePadCommandHandler(padRepository);
-    CommandResponse<String> cmdResponse = cmdHandler.handle(new CreatePadCommand());
+    CommandResponse<String> cmdResponse = cmdHandler.execute(new CreatePadCommand());
 
     String padId = cmdResponse.value();
     GetPadQuery getPadQuery = new GetPadQuery(padId);
     GetPadQueryHandler queryHandler = new GetPadQueryHandler(padRepository);
 
     // when
-    QueryResponse<Optional<Pad>> response = queryHandler.handle(getPadQuery);
+    QueryResponse<Optional<Pad>> response = queryHandler.execute(getPadQuery);
 
     // then
     assertThat(response.success()).isTrue();
     assertThat(response.value().isPresent()).isTrue();
-    assertThat(response.value().get().id).isEqualTo(padId);
+    assertThat(response.value().get()._id).isEqualTo(padId);
   }
 }

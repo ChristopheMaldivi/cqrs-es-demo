@@ -1,6 +1,6 @@
-package com.tophe.ddd.pad.infrastructure.query;
+package com.tophe.ddd.pad.query;
 
-import com.tophe.ddd.infrastructure.queries.Query;
+import com.tophe.ddd.queries.Query;
 
 public class GetPadQuery implements Query {
   public final String padId;

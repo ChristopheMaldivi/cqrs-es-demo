@@ -1,10 +1,11 @@
-package com.tophe.ddd.infrastructure;
+package com.tophe.ddd.infrastructure.persistence;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,10 +14,10 @@ public class InMemoryRepositoryTest {
   private InMemoryRepository<Pojo, String> repo;
 
   class Pojo {
-    final String id = null;
+    String _id = null;
   }
   class PojoLongId {
-    final Long id = null;
+    Long _id = null;
   }
 
   @Before
@@ -30,7 +31,7 @@ public class InMemoryRepositoryTest {
     Pojo pojo = repo.save(new Pojo());
 
     // then
-    assertThat(pojo.id).isNotEmpty();
+    assertThat(pojo._id).isNotEmpty();
   }
 
   @Test
@@ -42,7 +43,36 @@ public class InMemoryRepositoryTest {
     PojoLongId pojo = longIdRepo.save(new PojoLongId());
 
     // then
-    assertThat(pojo.id).isEqualTo(0);
+    assertThat(pojo._id).isEqualTo(0);
+  }
+
+  @Test
+  public void add_an_element_to_the_repository_with_an_existing_STRING_id_and_retrieve_it_with_this_id() {
+    // given
+    String id = UUID.randomUUID().toString();
+    Pojo pojo = new Pojo();
+    pojo._id = id;
+
+    // when
+    pojo = repo.save(pojo);
+
+    // then
+    assertThat(pojo._id).isEqualTo(id);
+  }
+
+  @Test
+  public void add_an_element_to_the_repository_with_an_existing_LONG_id_and_retrieve_it_with_this_id() {
+    // given
+    InMemoryRepository<PojoLongId, Long> longIdRepo = new InMemoryRepository<>();
+    int id = UUID.randomUUID().hashCode();
+    PojoLongId pojo = new PojoLongId();
+    pojo._id = Long.valueOf(id);
+
+    // when
+    pojo = longIdRepo.save(pojo);
+
+    // then
+    assertThat(pojo._id).isEqualTo(id);
   }
 
   @Test
@@ -52,31 +82,31 @@ public class InMemoryRepositoryTest {
     Pojo pojo2 = repo.save(new Pojo());
 
     // then
-    assertThat(pojo1.id).isNotEmpty();
-    assertThat(pojo2.id).isNotEmpty();
-    assertThat(pojo1.id).isNotEqualTo(pojo2.id);
+    assertThat(pojo1._id).isNotEmpty();
+    assertThat(pojo2._id).isNotEmpty();
+    assertThat(pojo1._id).isNotEqualTo(pojo2._id);
   }
 
   @Test
   public void find_an_element_by_id() {
     // when
     Pojo pojo = repo.save(new Pojo());
-    Optional<Pojo> foundPojo = repo.findById(pojo.id);
+    Optional<Pojo> foundPojo = repo.findById(pojo._id);
 
     // then
     assertThat(foundPojo.isPresent()).isTrue();
-    assertThat(foundPojo.get().id).isEqualTo(pojo.id);
+    assertThat(foundPojo.get()._id).isEqualTo(pojo._id);
   }
 
   @Test
   public void find_an_element_by_id_list() {
     // when
     Pojo pojo = repo.save(new Pojo());
-    Iterable<Pojo> foundPojos = repo.findAllById(Arrays.asList(new String[]{pojo.id}));
+    Iterable<Pojo> foundPojos = repo.findAllById(Arrays.asList(new String[]{pojo._id}));
 
     // then
     assertThat(foundPojos).hasSize(1);
-    assertThat(foundPojos.iterator().next().id).isEqualTo(pojo.id);
+    assertThat(foundPojos.iterator().next()._id).isEqualTo(pojo._id);
   }
 
   @Test
@@ -87,14 +117,14 @@ public class InMemoryRepositoryTest {
 
     // then
     assertThat(foundPojo).hasSize(1);
-    assertThat(foundPojo.iterator().next().id).isEqualTo(pojo.id);
+    assertThat(foundPojo.iterator().next()._id).isEqualTo(pojo._id);
   }
 
   @Test
   public void delete_an_element_by_id() {
     // when
     Pojo pojo = repo.save(new Pojo());
-    repo.deleteById(pojo.id);
+    repo.deleteById(pojo._id);
 
     // then
     assertThat(repo.findAll()).hasSize(0);
