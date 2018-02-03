@@ -21,7 +21,7 @@ public class InMemoryRepositoryTest {
   }
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     repo = new InMemoryRepository<>();
   }
 

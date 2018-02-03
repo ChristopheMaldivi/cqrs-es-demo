@@ -1,10 +1,10 @@
 package com.tophe.ddd.queries;
 
+import com.tophe.ddd.example.message.domain.Message;
+import com.tophe.ddd.example.message.infrastructure.MessageInMemoryRepository;
+import com.tophe.ddd.example.message.query.GetMessageQuery;
+import com.tophe.ddd.example.message.query.GetMessageQueryHandler;
 import com.tophe.ddd.infrastructure.bus.NoBusHandlerFound;
-import com.tophe.ddd.pad.domain.Pad;
-import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;
-import com.tophe.ddd.pad.query.GetPadQuery;
-import com.tophe.ddd.pad.query.GetPadQueryHandler;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -61,13 +61,13 @@ public class QueryBusTest {
   @Test
   public void dispatch_get_pad_query_and_receives_response() {
     // given
-    GetPadQuery getPadQuery = new GetPadQuery("");
-    GetPadQueryHandler handler = new GetPadQueryHandler(new PadInMemoryRepository());
+    GetMessageQuery getMessageQuery = new GetMessageQuery("");
+    GetMessageQueryHandler handler = new GetMessageQueryHandler(new MessageInMemoryRepository());
     QueryBus queryBus = new QueryBus();
     queryBus.register(handler);
 
     // when
-    QueryResponse<Optional<Pad>> response = queryBus.dispatch(getPadQuery);
+    QueryResponse<Optional<Message>> response = queryBus.dispatch(getMessageQuery);
 
     // then
     assertThat(response.success()).isTrue();
@@ -76,11 +76,11 @@ public class QueryBusTest {
   @Test
   public void dispatch_without_registered_handlers_and_receives_empty_response() {
     // given
-    GetPadQuery getPadQuery = new GetPadQuery("");
+    GetMessageQuery getMessageQuery = new GetMessageQuery("");
     QueryBus queryBus = new QueryBus();
 
     // when
-    QueryResponse<Pad> response = queryBus.dispatch(getPadQuery);
+    QueryResponse<Message> response = queryBus.dispatch(getMessageQuery);
 
     // then
     assertThat(response.success()).isFalse();

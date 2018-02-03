@@ -2,6 +2,7 @@ package com.tophe.ddd.infrastructure.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -14,8 +15,7 @@ public abstract class Event {
    * Index: speed aggregate rebuild (we look up all events to rebuild the aggregate with given id)
    * Any Data store type should provide such feature
    */
-  // TODO, FIXME: depending on the DB you use, this field should be indexed
-  // @Indexed
+  @Indexed
   public final String aggregateId;
 
   public final String date;

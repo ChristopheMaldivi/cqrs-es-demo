@@ -1,14 +1,13 @@
 package com.tophe.ddd.commands;
 
+import com.tophe.ddd.example.message.command.CuiCuiCommand;
+import com.tophe.ddd.example.message.command.CuiCuiCommandHandler;
+import com.tophe.ddd.example.message.infrastructure.MessageInMemoryRepository;
 import com.tophe.ddd.infrastructure.bus.NoBusHandlerFound;
 import com.tophe.ddd.infrastructure.event.Event;
-import com.tophe.ddd.pad.command.CreatePadCommand;
-import com.tophe.ddd.pad.command.CreatePadCommandHandler;
-import com.tophe.ddd.pad.infrastructure.PadInMemoryRepository;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,7 +32,7 @@ public class CommandBusTest {
     commandBus.dispatch(fakeCommand);
 
     // then
-    Assertions.assertThat(handler.executed).isTrue();
+    assertThat(handler.executed).isTrue();
   }
 
   @Test
@@ -49,41 +48,41 @@ public class CommandBusTest {
     // when
     commandBus.dispatch(fakeCommand1);
     // then
-    Assertions.assertThat(handler1.executed).isTrue();
-    Assertions.assertThat(handler2.executed).isFalse();
+    assertThat(handler1.executed).isTrue();
+    assertThat(handler2.executed).isFalse();
 
     // when
     handler1.executed = false;
     commandBus.dispatch(fakeCommand2);
     // then
-    Assertions.assertThat(handler1.executed).isFalse();
-    Assertions.assertThat(handler2.executed).isTrue();
+    assertThat(handler1.executed).isFalse();
+    assertThat(handler2.executed).isTrue();
   }
 
   @Test
   public void dispatch_create_pad_command_and_receives_response() {
     // given
-    CreatePadCommand createPadCommand = new CreatePadCommand();
-    CreatePadCommandHandler createPadCommandHandler = new CreatePadCommandHandler(new PadInMemoryRepository());
+    CuiCuiCommand cuiCuiCommand = new CuiCuiCommand("Say cuicui little bird");
+    CuiCuiCommandHandler cuiCuiCommandHandler = new CuiCuiCommandHandler(new MessageInMemoryRepository(), null);
     CommandBus commandBus = new CommandBus();
-    commandBus.register(createPadCommandHandler);
+    commandBus.register(cuiCuiCommandHandler);
 
     // when
-    CommandResponse<String> response = commandBus.dispatch(createPadCommand);
+    CommandResponse<String> response = commandBus.dispatch(cuiCuiCommand);
 
     // then
-    Assertions.assertThat(response.success()).isTrue();
-    Assertions.assertThat(response.value()).isEqualTo("0");
+    assertThat(response.success()).isTrue();
+    assertThat(response.value()).isNotEmpty();
   }
 
   @Test
   public void dispatch_without_registered_handlers_and_receives_failure_response() {
     // given
-    CreatePadCommand createPadCommand = new CreatePadCommand();
+    CuiCuiCommand cuiCuiCommand = new CuiCuiCommand("Say cuicui little bird");
     CommandBus commandBus = new CommandBus();
 
     // when
-    CommandResponse<String> response = commandBus.dispatch(createPadCommand);
+    CommandResponse<String> response = commandBus.dispatch(cuiCuiCommand);
 
     // then
     assertThat(response.success()).isFalse();
