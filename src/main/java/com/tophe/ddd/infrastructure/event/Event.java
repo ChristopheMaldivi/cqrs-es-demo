@@ -6,11 +6,11 @@ import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 @ToString
 @RequiredArgsConstructor
 public abstract class Event {
-
   /**
    * Index: speed aggregate rebuild (we look up all events to rebuild the aggregate with given id)
    * Any Data store type should provide such feature
