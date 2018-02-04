@@ -9,12 +9,12 @@ import org.tophe.cqrses.queries.QueryHandler;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class GetMessageQueryHandler extends QueryHandler<GetMessageQuery, Optional<Message>> {
+public class GetMessageQueryHandler extends QueryHandler<GetMessageQuery, Message> {
   private final MessageRepository messageRepository;
   private final MessagesProjection messagesProjection;
 
   @Override
-  public Optional<Message> doExecute(GetMessageQuery query) {
+  public Message doExecute(GetMessageQuery query) {
     // regular way, retrieve message from regular repository
     Optional<Message> persistedMessage = messageRepository.findById(query.messageId);
 
@@ -28,6 +28,10 @@ public class GetMessageQueryHandler extends QueryHandler<GetMessageQuery, Option
       }
     }
 
-    return messageRebuiltWithEvents;
+    messageRebuiltWithEvents.orElseThrow(() ->
+      new IllegalArgumentException("Failed to find message with id: " + query.messageId)
+    );
+
+    return messageRebuiltWithEvents.get();
   }
 }

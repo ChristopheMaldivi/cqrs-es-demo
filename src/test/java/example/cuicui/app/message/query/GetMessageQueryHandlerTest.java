@@ -40,11 +40,10 @@ public class GetMessageQueryHandlerTest {
     GetMessageQuery getMessageQuery = new GetMessageQuery(messageId);
 
     // when
-    QueryResponse<Optional<Message>> response = queryHandler.execute(getMessageQuery);
+    QueryResponse<Message> response = queryHandler.execute(getMessageQuery);
 
     // then
-    assertThat(response.success()).isTrue();
-    assertThat(response.value().isPresent()).isFalse();
+    assertThat(response.success()).isFalse();
   }
 
   @Test
@@ -60,12 +59,11 @@ public class GetMessageQueryHandlerTest {
     GetMessageQuery getMessageQuery = new GetMessageQuery(messageId);
 
     // when
-    QueryResponse<Optional<Message>> response = queryHandler.execute(getMessageQuery);
+    QueryResponse<Message> response = queryHandler.execute(getMessageQuery);
 
     // then
     assertThat(response.success()).isTrue();
-    assertThat(response.value().isPresent()).isTrue();
-    assertThat(response.value().get()).isEqualTo(Message.builder()
+    assertThat(response.value()).isEqualTo(Message.builder()
       ._id(messageId)
       .message(cuicui)
       .like(1)
