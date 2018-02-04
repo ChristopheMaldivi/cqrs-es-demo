@@ -6,4 +6,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CuiCuiCommand implements Command {
   public final String message;
+
+  /** for deserialization */
+  CuiCuiCommand() {
+    message = null;
+  }
 }

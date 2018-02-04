@@ -1,11 +1,10 @@
 package example.cuicui.app.message.transport;
 
 import example.cuicui.app.message.command.CuiCuiCommand;
+import example.cuicui.app.message.command.LikeCuiCuiCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.tophe.cqrses.commands.CommandBus;
 
 @Slf4j
@@ -23,9 +22,23 @@ public class MessageController {
    * curl -H "Content-Type: application/json" -X POST -d '{"message": ""}' http://localhost:8080/cuicui
    */
   @RequestMapping(value = "/cuicui", method = RequestMethod.POST)
-  public void cuicui(CuiCuiCommand cuiCuiCommand) {
+  public void cuicui(@RequestBody CuiCuiCommand cuiCuiCommand) {
     commandBus.dispatch(cuiCuiCommand)
       .onSuccess(id -> log.info("Message created with id: " + id))
       .onFailure(throwable -> log.error("Failed to create message: " + throwable.toString(), throwable));
+  }
+
+  /**
+   * test me with:
+   * curl -X POST http://localhost:8080/message/{id}/like
+   *
+   * fail me with:
+   * curl -X POST http://localhost:8080/message/invalid-id/like
+   */
+  @RequestMapping(value = "/message/{messageId}/like", method = RequestMethod.POST)
+  public void cuicui(@PathVariable String messageId) {
+    commandBus.dispatch(new LikeCuiCuiCommand(messageId))
+      .onSuccess(id -> log.info("Message liked with id: " + id))
+      .onFailure(throwable -> log.error("Failed to like message: " + throwable.toString(), throwable));
   }
 }
