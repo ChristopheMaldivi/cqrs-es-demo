@@ -1,10 +1,10 @@
 package org.tophe.cqrses.commands;
 
-import org.tophe.cqrses.example.message.command.CuiCuiCommand;
-import org.tophe.cqrses.example.message.command.CuiCuiCommandHandler;
-import org.tophe.cqrses.example.message.infrastructure.MessageInMemoryRepository;
+import example.cuicui.app.message.command.CuiCuiCommand;
+import example.cuicui.app.message.command.CuiCuiCommandHandler;
+import example.cuicui.app.message.infrastructure.MessageInMemoryRepository;
 import org.tophe.cqrses.infrastructure.bus.NoBusHandlerFound;
-import org.tophe.cqrses.infrastructure.event.Event;
+import org.tophe.cqrses.event.Event;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;

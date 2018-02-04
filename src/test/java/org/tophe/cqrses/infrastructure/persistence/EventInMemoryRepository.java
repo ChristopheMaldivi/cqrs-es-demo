@@ -1,6 +1,7 @@
 package org.tophe.cqrses.infrastructure.persistence;
 
-import org.tophe.cqrses.infrastructure.event.Event;
+import example.cuicui.app.message.infrastructure.persistence.EventRepository;
+import org.tophe.cqrses.event.Event;
 
 import java.util.ArrayList;
 import java.util.Collection;

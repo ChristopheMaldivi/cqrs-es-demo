@@ -1,9 +1,9 @@
 package org.tophe.cqrses.queries;
 
-import org.tophe.cqrses.example.message.domain.Message;
-import org.tophe.cqrses.example.message.infrastructure.MessageInMemoryRepository;
-import org.tophe.cqrses.example.message.query.GetMessageQuery;
-import org.tophe.cqrses.example.message.query.GetMessageQueryHandler;
+import example.cuicui.app.message.domain.Message;
+import example.cuicui.app.message.infrastructure.MessageInMemoryRepository;
+import example.cuicui.app.message.query.GetMessageQuery;
+import example.cuicui.app.message.query.GetMessageQueryHandler;
 import org.tophe.cqrses.infrastructure.bus.NoBusHandlerFound;
 import org.junit.Test;
 

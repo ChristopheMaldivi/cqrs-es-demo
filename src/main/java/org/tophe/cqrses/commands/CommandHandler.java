@@ -1,8 +1,8 @@
 package org.tophe.cqrses.commands;
 
 import org.tophe.cqrses.infrastructure.bus.BusHandler;
-import org.tophe.cqrses.infrastructure.event.Event;
-import org.tophe.cqrses.infrastructure.event.EventBus;
+import org.tophe.cqrses.event.Event;
+import org.tophe.cqrses.event.EventBus;
 import io.vavr.Tuple2;
 import io.vavr.collection.List;
 import io.vavr.control.Try;
