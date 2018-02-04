@@ -5,6 +5,7 @@ import com.tophe.ddd.example.message.command.CuiCuiCommandHandler;
 import com.tophe.ddd.example.message.command.LikeCuiCuiCommandHandler;
 import com.tophe.ddd.example.message.infrastructure.persistence.MessageRepository;
 import com.tophe.ddd.example.message.query.GetMessageQueryHandler;
+import com.tophe.ddd.example.message.query.projection.MessagesProjection;
 import com.tophe.ddd.infrastructure.event.Event;
 import com.tophe.ddd.infrastructure.event.EventBus;
 import com.tophe.ddd.infrastructure.persistence.EventRepository;
@@ -29,6 +30,9 @@ public class CqrsEsDemoApplication {
   @Autowired
   MessageRepository messageRepository;
 
+  @Autowired
+  MessagesProjection projection;
+
   @Bean
   public CommandBus commandBus() {
     EventBus eventBus = initEventBus();
@@ -43,7 +47,7 @@ public class CqrsEsDemoApplication {
 
   private EventBus initEventBus() {
     EventBus eventBus = new EventBus(eventRepository);
-    // FIXME eventBus.register(projections);
+    eventBus.register(projection);
     return eventBus;
   }
 

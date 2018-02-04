@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@Builder
+@Builder(toBuilder = true)
 @ToString
 @EqualsAndHashCode
 public class Message {
@@ -23,5 +23,9 @@ public class Message {
       .like(like == null ? 1 : like + 1)
       .build();
     return Tuple.of(newMessage, new CuiCuiLiked(_id));
+  }
+
+  public Message apply(Event event) {
+    return MessageHistory.apply(this, event);
   }
 }
