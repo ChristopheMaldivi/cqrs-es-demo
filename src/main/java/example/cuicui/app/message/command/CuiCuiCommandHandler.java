@@ -30,7 +30,10 @@ public class CuiCuiCommandHandler extends CommandHandler<CuiCuiCommand, String> 
       .message(command.message)
       .build();
 
+    // regular repository version
     messageRepository.save(message);
+
+    // for event sourced version
     Event event = new CuiCuiCreated(id, command.message);
 
     return Tuple.of(id, List.of(event));

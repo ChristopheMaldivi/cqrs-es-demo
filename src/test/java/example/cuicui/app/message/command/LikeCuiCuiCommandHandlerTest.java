@@ -31,7 +31,7 @@ public class LikeCuiCuiCommandHandlerTest {
     String id = (new CuiCuiCommandHandler(messageRepository, eventBus)).execute(new CuiCuiCommand(cuicui)).value();
 
     // when
-    CommandResponse<Message> response = handler.execute(new LikeCuiCuiCommand(id));
+    CommandResponse<String> response = handler.execute(new LikeCuiCuiCommand(id));
 
     // then
     assertThat(response.success()).isTrue();
@@ -51,7 +51,7 @@ public class LikeCuiCuiCommandHandlerTest {
     String id = (new CuiCuiCommandHandler(messageRepository, eventBus)).execute(new CuiCuiCommand(cuicui)).value();
 
     // when
-    CommandResponse<Message> response = handler.execute(new LikeCuiCuiCommand(id));
+    CommandResponse<String> response = handler.execute(new LikeCuiCuiCommand(id));
 
     // then
     assertThat(response.success()).isTrue();

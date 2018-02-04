@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 public class CuiCuiCommand implements Command {
   public final String message;
 
-  /** for deserialization */
+  /** for deserialization as we use the command directly in controller from JSON POST */
   CuiCuiCommand() {
     message = null;
   }
