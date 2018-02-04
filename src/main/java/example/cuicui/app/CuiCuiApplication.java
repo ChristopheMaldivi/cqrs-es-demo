@@ -40,7 +40,7 @@ public class CuiCuiApplication {
     CommandBus commandBus = new CommandBus();
     commandBus.register(
       new CuiCuiCommandHandler(messageRepository, eventBus),
-      new LikeCuiCuiCommandHandler(messageRepository, eventBus)
+      new LikeCuiCuiCommandHandler(messageRepository, eventRepository, eventBus)
     );
     return commandBus;
   }
@@ -55,7 +55,7 @@ public class CuiCuiApplication {
   public QueryBus queryBus() {
     QueryBus queryBus = new QueryBus();
     queryBus.register(
-      new GetMessageQueryHandler(messageRepository)
+      new GetMessageQueryHandler(messageRepository, projection)
     );
     return queryBus;
   }

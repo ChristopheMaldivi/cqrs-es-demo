@@ -1,32 +1,36 @@
 package example.cuicui.app.message.query;
 
-import org.tophe.cqrses.commands.CommandResponse;
 import example.cuicui.app.message.command.CuiCuiCommand;
 import example.cuicui.app.message.command.CuiCuiCommandHandler;
 import example.cuicui.app.message.command.LikeCuiCuiCommand;
 import example.cuicui.app.message.command.LikeCuiCuiCommandHandler;
 import example.cuicui.app.message.domain.Message;
 import example.cuicui.app.message.infrastructure.MessageInMemoryRepository;
+import example.cuicui.app.message.infrastructure.persistence.EventRepository;
 import example.cuicui.app.message.infrastructure.persistence.MessageRepository;
-import org.tophe.cqrses.event.EventBus;
-import org.tophe.cqrses.event.TestEventHandler;
-import org.tophe.cqrses.queries.QueryResponse;
+import example.cuicui.app.message.query.projection.MessagesProjection;
 import org.junit.Before;
 import org.junit.Test;
+import org.tophe.cqrses.commands.CommandResponse;
+import org.tophe.cqrses.event.EventBus;
+import org.tophe.cqrses.event.TestEventHandler;
+import org.tophe.cqrses.infrastructure.persistence.EventInMemoryRepository;
+import org.tophe.cqrses.queries.QueryResponse;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetMessageQueryHandlerTest {
-  TestEventHandler testEventHandler = new TestEventHandler();
-  EventBus eventBus = new EventBus();
   MessageRepository messageRepository = new MessageInMemoryRepository();
-  GetMessageQueryHandler queryHandler = new GetMessageQueryHandler(messageRepository);
+  EventRepository eventRepository = new EventInMemoryRepository();
+  EventBus eventBus = new EventBus(eventRepository);
+  MessagesProjection projection = new MessagesProjection(null);
+  GetMessageQueryHandler queryHandler = new GetMessageQueryHandler(messageRepository, projection);
 
   @Before
   public void setUp() {
-    eventBus.register(testEventHandler);
+    eventBus.register(projection);
   }
 
   @Test
@@ -51,7 +55,7 @@ public class GetMessageQueryHandlerTest {
     CommandResponse<String> cmdResponse = cmdHandler.execute(new CuiCuiCommand(cuicui));
     String messageId = cmdResponse.value();
 
-    (new LikeCuiCuiCommandHandler(messageRepository, eventBus)).execute(new LikeCuiCuiCommand(messageId));
+    (new LikeCuiCuiCommandHandler(messageRepository, eventRepository, eventBus)).execute(new LikeCuiCuiCommand(messageId));
 
     GetMessageQuery getMessageQuery = new GetMessageQuery(messageId);
 

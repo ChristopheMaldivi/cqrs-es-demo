@@ -1,13 +1,6 @@
 package org.tophe.cqrses.queries;
 
-import example.cuicui.app.message.domain.Message;
-import example.cuicui.app.message.infrastructure.MessageInMemoryRepository;
-import example.cuicui.app.message.query.GetMessageQuery;
-import example.cuicui.app.message.query.GetMessageQueryHandler;
-import org.tophe.cqrses.infrastructure.bus.NoBusHandlerFound;
 import org.junit.Test;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,35 +51,6 @@ public class QueryBusTest {
     assertThat(handler2.executed).isTrue();
   }
 
-  @Test
-  public void dispatch_get_pad_query_and_receives_response() {
-    // given
-    GetMessageQuery getMessageQuery = new GetMessageQuery("");
-    GetMessageQueryHandler handler = new GetMessageQueryHandler(new MessageInMemoryRepository());
-    QueryBus queryBus = new QueryBus();
-    queryBus.register(handler);
-
-    // when
-    QueryResponse<Optional<Message>> response = queryBus.dispatch(getMessageQuery);
-
-    // then
-    assertThat(response.success()).isTrue();
-  }
-
-  @Test
-  public void dispatch_without_registered_handlers_and_receives_empty_response() {
-    // given
-    GetMessageQuery getMessageQuery = new GetMessageQuery("");
-    QueryBus queryBus = new QueryBus();
-
-    // when
-    QueryResponse<Message> response = queryBus.dispatch(getMessageQuery);
-
-    // then
-    assertThat(response.success()).isFalse();
-    assertThat(response.failureCause()).contains(NoBusHandlerFound.class.getName());
-  }
-
   private class FakeQueryHandler1 extends QueryHandler<FakeQuery1, String> {
     public boolean executed;
 
@@ -96,6 +60,7 @@ public class QueryBusTest {
       return "";
     }
   }
+
   private class FakeQueryHandler2 extends QueryHandler<FakeQuery2, String> {
     public boolean executed;
 

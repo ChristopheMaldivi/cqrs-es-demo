@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @Builder(toBuilder = true)
-@ToString
+@ToString(callSuper = true)
 @EqualsAndHashCode
 public class Message {
   public final String _id;

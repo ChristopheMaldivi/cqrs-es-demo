@@ -85,9 +85,6 @@ public class InMemoryRepository<AggregateRoot, AggregateId> implements Repositor
       Class<?> clazz = entity.getClass();
       f = retrieveField(f, clazz, "_id");
       if (f == null) {
-        f = retrieveField(f, clazz, "aggregateId");
-      }
-      if (f == null) {
         throw new NoSuchFieldException();
       }
 

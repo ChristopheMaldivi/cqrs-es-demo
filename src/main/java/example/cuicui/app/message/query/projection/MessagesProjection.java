@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,12 +30,9 @@ public class MessagesProjection extends EventHandler {
     return List.ofAll(map.keySet());
   }
 
-  public Message get(String id) {
+  public Optional<Message> get(String id) {
     Message val = map.get(id);
-    if (val == null) {
-      new IllegalStateException("message id not found: " + id);
-    }
-    return val;
+    return Optional.ofNullable(val);
   }
 
   @PostConstruct

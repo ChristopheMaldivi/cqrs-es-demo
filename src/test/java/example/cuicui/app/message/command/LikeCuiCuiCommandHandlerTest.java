@@ -1,5 +1,6 @@
 package example.cuicui.app.message.command;
 
+import example.cuicui.app.message.infrastructure.persistence.EventRepository;
 import org.tophe.cqrses.commands.CommandResponse;
 import example.cuicui.app.message.domain.Message;
 import example.cuicui.app.message.events.CuiCuiCreated;
@@ -10,14 +11,16 @@ import org.tophe.cqrses.event.EventBus;
 import org.tophe.cqrses.event.TestEventHandler;
 import org.junit.Before;
 import org.junit.Test;
+import org.tophe.cqrses.infrastructure.persistence.EventInMemoryRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LikeCuiCuiCommandHandlerTest {
   TestEventHandler testEventHandler = new TestEventHandler();
-  EventBus eventBus = new EventBus();
   MessageRepository messageRepository = new MessageInMemoryRepository();
-  LikeCuiCuiCommandHandler handler = new LikeCuiCuiCommandHandler(messageRepository, eventBus);
+  EventRepository eventRepository = new EventInMemoryRepository();
+  EventBus eventBus = new EventBus(eventRepository);
+  LikeCuiCuiCommandHandler handler = new LikeCuiCuiCommandHandler(messageRepository, eventRepository, eventBus);
 
   @Before
   public void setUp() {
