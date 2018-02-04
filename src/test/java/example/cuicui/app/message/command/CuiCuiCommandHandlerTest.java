@@ -24,6 +24,19 @@ public class CuiCuiCommandHandlerTest {
   }
 
   @Test
+  public void empty_message_should_fail() {
+    // given
+    String emptyMessage = "";
+    CuiCuiCommand command = new CuiCuiCommand(emptyMessage);
+
+    // when
+    CommandResponse<String> response = handler.execute(command);
+
+    // then
+    assertThat(response.failure()).isTrue();
+  }
+
+  @Test
   public void create_message_when_user_says_cuicui_and_check_message_repository() {
     // given
     String cuicui = "Say cuicui little bird";

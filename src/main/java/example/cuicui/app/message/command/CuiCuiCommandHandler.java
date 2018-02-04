@@ -22,6 +22,8 @@ public class CuiCuiCommandHandler extends CommandHandler<CuiCuiCommand, String> 
 
   @Override
   public Tuple2<String, List<Event>> doExecute(CuiCuiCommand command) {
+    validateCommand(command);
+
     String id = UUID.randomUUID().toString();
     Message message = Message.builder()
       ._id(id)
@@ -32,5 +34,11 @@ public class CuiCuiCommandHandler extends CommandHandler<CuiCuiCommand, String> 
     Event event = new CuiCuiCreated(id, command.message);
 
     return Tuple.of(id, List.of(event));
+  }
+
+  private void validateCommand(CuiCuiCommand command) {
+    if (command.message == null || command.message.isEmpty()) {
+      throw new IllegalArgumentException("message is null or empty");
+    }
   }
 }
