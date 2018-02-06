@@ -5,6 +5,8 @@ import example.cuicui.app.message.infrastructure.persistence.MessageEventReposit
 import example.cuicui.app.user.command.RegisterNewUserCommandHandler;
 import example.cuicui.app.user.events.UserEvent;
 import example.cuicui.app.user.infrastructure.persistence.UserEventRepository;
+import example.cuicui.app.user.query.GetUserQueryHandler;
+import example.cuicui.app.user.query.projection.UsersProjection;
 import org.tophe.cqrses.commands.CommandBus;
 import example.cuicui.app.message.command.CuiCuiCommandHandler;
 import example.cuicui.app.message.command.LikeCuiCuiCommandHandler;
@@ -37,7 +39,10 @@ public class CuiCuiApplication {
   MessageRepository messageRepository;
 
   @Autowired
-  MessagesProjection projection;
+  MessagesProjection messagesProjection;
+
+  @Autowired
+  UsersProjection usersProjection;
 
   @Bean
   public CommandBus commandBus() {
@@ -54,7 +59,7 @@ public class CuiCuiApplication {
 
   private EventBus initEventBus() {
     EventBus eventBus = new EventBus(userEventRepository, messageEventRepository);
-    eventBus.register(projection);
+    eventBus.register(usersProjection, messagesProjection);
     return eventBus;
   }
 
@@ -62,7 +67,8 @@ public class CuiCuiApplication {
   public QueryBus queryBus() {
     QueryBus queryBus = new QueryBus();
     queryBus.register(
-      new GetMessageQueryHandler(messageRepository, projection)
+      new GetUserQueryHandler(usersProjection),
+      new GetMessageQueryHandler(messageRepository, messagesProjection)
     );
     return queryBus;
   }
