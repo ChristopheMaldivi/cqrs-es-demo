@@ -1,13 +1,11 @@
 package example.cuicui.app.message.domain;
 
+import example.cuicui.app.message.domain.Message.MessageBuilder;
 import example.cuicui.app.message.events.CuiCuiCreated;
 import example.cuicui.app.message.events.CuiCuiLiked;
 import org.tophe.cqrses.event.Event;
-import example.cuicui.app.message.domain.Message.MessageBuilder;
 
-import static io.vavr.API.$;
-import static io.vavr.API.Case;
-import static io.vavr.API.Match;
+import static io.vavr.API.*;
 import static io.vavr.Predicates.instanceOf;
 
 public class MessageHistory {

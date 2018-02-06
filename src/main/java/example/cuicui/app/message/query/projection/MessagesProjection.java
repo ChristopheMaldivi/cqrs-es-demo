@@ -3,7 +3,7 @@ package example.cuicui.app.message.query.projection;
 import example.cuicui.app.message.domain.Message;
 import org.tophe.cqrses.event.Event;
 import org.tophe.cqrses.event.EventHandler;
-import example.cuicui.app.message.infrastructure.persistence.EventRepository;
+import org.tophe.cqrses.event.EventRepository;
 import io.vavr.collection.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

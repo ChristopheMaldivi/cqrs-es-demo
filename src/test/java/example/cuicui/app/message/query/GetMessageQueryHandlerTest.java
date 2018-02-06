@@ -5,25 +5,22 @@ import example.cuicui.app.message.command.CuiCuiCommandHandler;
 import example.cuicui.app.message.command.LikeCuiCuiCommand;
 import example.cuicui.app.message.command.LikeCuiCuiCommandHandler;
 import example.cuicui.app.message.domain.Message;
+import example.cuicui.app.message.infrastructure.MessageEventInMemoryRepository;
 import example.cuicui.app.message.infrastructure.MessageInMemoryRepository;
-import example.cuicui.app.message.infrastructure.persistence.EventRepository;
 import example.cuicui.app.message.infrastructure.persistence.MessageRepository;
 import example.cuicui.app.message.query.projection.MessagesProjection;
 import org.junit.Before;
 import org.junit.Test;
 import org.tophe.cqrses.commands.CommandResponse;
 import org.tophe.cqrses.event.EventBus;
-import org.tophe.cqrses.event.TestEventHandler;
-import org.tophe.cqrses.infrastructure.persistence.EventInMemoryRepository;
+import org.tophe.cqrses.event.EventRepository;
 import org.tophe.cqrses.queries.QueryResponse;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetMessageQueryHandlerTest {
   MessageRepository messageRepository = new MessageInMemoryRepository();
-  EventRepository eventRepository = new EventInMemoryRepository();
+  EventRepository eventRepository = new MessageEventInMemoryRepository();
   EventBus eventBus = new EventBus(eventRepository);
   MessagesProjection projection = new MessagesProjection(null);
   GetMessageQueryHandler queryHandler = new GetMessageQueryHandler(messageRepository, projection);

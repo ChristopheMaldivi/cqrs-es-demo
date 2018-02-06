@@ -3,17 +3,16 @@ package example.cuicui.app.message.query.projection;
 import example.cuicui.app.message.domain.Message;
 import example.cuicui.app.message.events.CuiCuiCreated;
 import example.cuicui.app.message.events.CuiCuiLiked;
-import org.tophe.cqrses.event.Event;
-import org.tophe.cqrses.infrastructure.persistence.EventInMemoryRepository;
-import example.cuicui.app.message.infrastructure.persistence.EventRepository;
+import example.cuicui.app.message.infrastructure.MessageEventInMemoryRepository;
 import io.vavr.collection.List;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.tophe.cqrses.event.Event;
+import org.tophe.cqrses.event.EventRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MessagesProjectionTest {
-  EventRepository eventRepository = new EventInMemoryRepository();
+  EventRepository eventRepository = new MessageEventInMemoryRepository();
   MessagesProjection projection = new MessagesProjection(eventRepository);
 
   @Test

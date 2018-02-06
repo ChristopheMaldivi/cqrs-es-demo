@@ -1,35 +1,34 @@
 package org.tophe.cqrses.event;
 
-import example.cuicui.app.message.infrastructure.persistence.EventRepository;
-import lombok.RequiredArgsConstructor;
+import io.vavr.collection.List;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 @Slf4j
-@RequiredArgsConstructor
 public class EventBus {
-  private final List<EventHandler> handlers = new ArrayList<>();
-  private final EventRepository eventRepository;
+  private List<EventHandler> handlers = List.empty();
+  private List<EventRepository> eventRepositories;
 
-  public EventBus() {
-    eventRepository = null;
+  public EventBus(EventRepository... eventRepositories) {
+    this.eventRepositories = List.of(eventRepositories);
   }
 
-
   public void register(EventHandler... handlers) {
-    this.handlers.addAll(Arrays.asList(handlers));
+    this.handlers = this.handlers.appendAll(List.of(handlers));
   }
 
   public void dispatch(Event event) {
     log.info("    [EVENT] " + event.toString());
-    if (eventRepository != null) {
-      eventRepository.save(event);
-    }
-    handlers.stream()
+    save(event);
+    handlers
       .filter(h -> h.supports(event))
       .forEach(h -> h.onEvent(event));
+  }
+
+  private void save(Event event) {
+    eventRepositories
+      .filter(eventRepository -> eventRepository.supports(event))
+      .toOption()
+      .getOrElseThrow(() -> new IllegalStateException("Failed to find repository for event: " + event))
+      .save(event);
   }
 }

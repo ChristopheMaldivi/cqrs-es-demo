@@ -1,11 +1,13 @@
 package example.cuicui.app.message.command;
 
+import example.cuicui.app.message.infrastructure.MessageEventInMemoryRepository;
 import org.tophe.cqrses.commands.CommandResponse;
 import example.cuicui.app.message.domain.Message;
 import example.cuicui.app.message.events.CuiCuiCreated;
 import example.cuicui.app.message.infrastructure.MessageInMemoryRepository;
 import example.cuicui.app.message.infrastructure.persistence.MessageRepository;
 import org.tophe.cqrses.event.EventBus;
+import org.tophe.cqrses.event.EventRepository;
 import org.tophe.cqrses.event.TestEventHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,15 +15,11 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CuiCuiCommandHandlerTest {
-  TestEventHandler testEventHandler = new TestEventHandler();
-  EventBus eventBus = new EventBus();
+  EventRepository eventRepository = new MessageEventInMemoryRepository();
+  EventBus eventBus = new EventBus(eventRepository);
+
   MessageRepository messageRepository = new MessageInMemoryRepository();
   CuiCuiCommandHandler handler = new CuiCuiCommandHandler(messageRepository, eventBus);
-
-  @Before
-  public void setUp() {
-    eventBus.register(testEventHandler);
-  }
 
   @Test
   public void empty_message_should_fail() {
@@ -68,7 +66,7 @@ public class CuiCuiCommandHandlerTest {
 
     // then
     assertThat(response.success()).isTrue();
-    assertThat(testEventHandler.events()).containsExactly(
+    assertThat(eventRepository.findAll()).containsExactly(
       new CuiCuiCreated(response.value(), cuicui)
     );
   }

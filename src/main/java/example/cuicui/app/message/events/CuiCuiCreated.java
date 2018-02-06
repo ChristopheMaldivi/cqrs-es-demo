@@ -1,12 +1,11 @@
 package example.cuicui.app.message.events;
 
-import org.tophe.cqrses.event.Event;
 import lombok.ToString;
 import lombok.Value;
 
 @Value
 @ToString(callSuper = true)
-public class CuiCuiCreated extends Event {
+public class CuiCuiCreated extends MessageEvent {
   public final String message;
 
   public CuiCuiCreated(String id, String message) {

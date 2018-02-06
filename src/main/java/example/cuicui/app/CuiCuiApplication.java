@@ -8,7 +8,7 @@ import example.cuicui.app.message.query.GetMessageQueryHandler;
 import example.cuicui.app.message.query.projection.MessagesProjection;
 import org.tophe.cqrses.event.Event;
 import org.tophe.cqrses.event.EventBus;
-import example.cuicui.app.message.infrastructure.persistence.EventRepository;
+import org.tophe.cqrses.event.EventRepository;
 import org.tophe.cqrses.queries.QueryBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

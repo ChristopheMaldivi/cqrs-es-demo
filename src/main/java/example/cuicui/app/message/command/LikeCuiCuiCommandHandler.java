@@ -1,7 +1,7 @@
 package example.cuicui.app.message.command;
 
 import example.cuicui.app.message.domain.Message;
-import example.cuicui.app.message.infrastructure.persistence.EventRepository;
+import org.tophe.cqrses.event.EventRepository;
 import example.cuicui.app.message.infrastructure.persistence.MessageRepository;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;

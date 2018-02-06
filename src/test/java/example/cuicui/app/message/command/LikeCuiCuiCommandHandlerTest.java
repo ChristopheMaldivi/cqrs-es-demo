@@ -1,24 +1,24 @@
 package example.cuicui.app.message.command;
 
-import example.cuicui.app.message.infrastructure.persistence.EventRepository;
-import org.tophe.cqrses.commands.CommandResponse;
 import example.cuicui.app.message.domain.Message;
 import example.cuicui.app.message.events.CuiCuiCreated;
 import example.cuicui.app.message.events.CuiCuiLiked;
+import example.cuicui.app.message.infrastructure.MessageEventInMemoryRepository;
 import example.cuicui.app.message.infrastructure.MessageInMemoryRepository;
 import example.cuicui.app.message.infrastructure.persistence.MessageRepository;
-import org.tophe.cqrses.event.EventBus;
-import org.tophe.cqrses.event.TestEventHandler;
 import org.junit.Before;
 import org.junit.Test;
-import org.tophe.cqrses.infrastructure.persistence.EventInMemoryRepository;
+import org.tophe.cqrses.commands.CommandResponse;
+import org.tophe.cqrses.event.EventBus;
+import org.tophe.cqrses.event.EventRepository;
+import org.tophe.cqrses.event.TestEventHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LikeCuiCuiCommandHandlerTest {
   TestEventHandler testEventHandler = new TestEventHandler();
   MessageRepository messageRepository = new MessageInMemoryRepository();
-  EventRepository eventRepository = new EventInMemoryRepository();
+  EventRepository eventRepository = new MessageEventInMemoryRepository();
   EventBus eventBus = new EventBus(eventRepository);
   LikeCuiCuiCommandHandler handler = new LikeCuiCuiCommandHandler(messageRepository, eventRepository, eventBus);
 
