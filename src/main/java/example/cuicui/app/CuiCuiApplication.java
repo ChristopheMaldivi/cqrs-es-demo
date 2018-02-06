@@ -1,5 +1,10 @@
 package example.cuicui.app;
 
+import example.cuicui.app.message.events.MessageEvent;
+import example.cuicui.app.message.infrastructure.persistence.MessageEventRepository;
+import example.cuicui.app.user.command.RegisterNewUserCommandHandler;
+import example.cuicui.app.user.events.UserEvent;
+import example.cuicui.app.user.infrastructure.persistence.UserEventRepository;
 import org.tophe.cqrses.commands.CommandBus;
 import example.cuicui.app.message.command.CuiCuiCommandHandler;
 import example.cuicui.app.message.command.LikeCuiCuiCommandHandler;
@@ -8,7 +13,6 @@ import example.cuicui.app.message.query.GetMessageQueryHandler;
 import example.cuicui.app.message.query.projection.MessagesProjection;
 import org.tophe.cqrses.event.Event;
 import org.tophe.cqrses.event.EventBus;
-import org.tophe.cqrses.event.EventRepository;
 import org.tophe.cqrses.queries.QueryBus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -26,7 +30,9 @@ public class CuiCuiApplication {
   MongoTemplate mongoTemplate;
 
   @Autowired
-  EventRepository eventRepository;
+  MessageEventRepository messageEventRepository;
+  @Autowired
+  UserEventRepository userEventRepository;
   @Autowired
   MessageRepository messageRepository;
 
@@ -39,14 +45,15 @@ public class CuiCuiApplication {
 
     CommandBus commandBus = new CommandBus();
     commandBus.register(
+      new RegisterNewUserCommandHandler(eventBus),
       new CuiCuiCommandHandler(messageRepository, eventBus),
-      new LikeCuiCuiCommandHandler(messageRepository, eventRepository, eventBus)
+      new LikeCuiCuiCommandHandler(messageRepository, messageEventRepository, eventBus)
     );
     return commandBus;
   }
 
   private EventBus initEventBus() {
-    EventBus eventBus = new EventBus(eventRepository);
+    EventBus eventBus = new EventBus(userEventRepository, messageEventRepository);
     eventBus.register(projection);
     return eventBus;
   }
@@ -65,7 +72,8 @@ public class CuiCuiApplication {
     String fieldName = "aggregateId";
     // let exception be raised if field name is not correct (due to a refactoring?)
     Event.class.getDeclaredField(fieldName);
-    mongoTemplate.indexOps(Event.class).ensureIndex(new Index().on(fieldName, Sort.Direction.ASC));
+    mongoTemplate.indexOps(MessageEvent.class).ensureIndex(new Index().on(fieldName, Sort.Direction.ASC));
+    mongoTemplate.indexOps(UserEvent.class).ensureIndex(new Index().on(fieldName, Sort.Direction.ASC));
   }
 
 

@@ -1,13 +1,15 @@
 package example.cuicui.app.message.query.projection;
 
 import example.cuicui.app.message.domain.Message;
-import org.tophe.cqrses.event.Event;
-import org.tophe.cqrses.event.EventHandler;
-import org.tophe.cqrses.event.EventRepository;
+import example.cuicui.app.message.events.MessageEvent;
+import example.cuicui.app.message.infrastructure.persistence.MessageEventRepository;
 import io.vavr.collection.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.tophe.cqrses.event.Event;
+import org.tophe.cqrses.event.EventHandler;
+import org.tophe.cqrses.event.EventRepository;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -22,7 +24,7 @@ public class MessagesProjection extends EventHandler {
   private final Map<String, Message> map = new HashMap<>();
 
   @Autowired
-  public MessagesProjection(EventRepository eventRepository) {
+  public MessagesProjection(MessageEventRepository eventRepository) {
     this.eventRepository = eventRepository;
   }
 
@@ -54,6 +56,6 @@ public class MessagesProjection extends EventHandler {
 
   @Override
   protected boolean supports(Event event) {
-    return true;
+    return event instanceof MessageEvent;
   }
 }
