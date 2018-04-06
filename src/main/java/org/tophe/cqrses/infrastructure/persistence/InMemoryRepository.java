@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class InMemoryRepository<AggregateRoot, AggregateId> implements Repository<AggregateRoot, AggregateId> {
 
-  private final Map<AggregateId, AggregateRoot> map = new HashMap<>();
+  private final SortedMap<AggregateId, AggregateRoot> map = new TreeMap<>(new KeyComparator<AggregateId>());
 
   @Override
   public <S extends AggregateRoot> S save(S aggregate) {
@@ -125,7 +125,7 @@ public class InMemoryRepository<AggregateRoot, AggregateId> implements Repositor
     if (id instanceof String) {
       return (AggregateId) (map.size() + "");
     } else if (id instanceof Long) {
-      return (AggregateId) new Long(0);
+      return (AggregateId) new Long(map.size());
     }
     throw new IllegalStateException("Unsupported AggregateId type: " + id.getClass().toString());
   }

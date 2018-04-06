@@ -1,11 +1,16 @@
 package org.tophe.cqrses.infrastructure.persistence;
 
+import io.vavr.collection.List;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -180,5 +185,41 @@ public class InMemoryRepositoryTest {
 
     // then
     assertThat(repo.findAll()).hasSize(0);
+  }
+
+  @Test
+  public void find_all_should_return_elements_in_insertion_order_for_String_id() {
+    // given
+    List<Integer> ids0To100 = List.range(0, 100);
+    repo.saveAll(
+      ids0To100.map(i -> new Pojo())
+    );
+
+    // when
+    Iterable<Pojo> all = repo.findAll();
+    List<Integer> ids = List.ofAll(all)
+      .map(pojo -> pojo._id)
+      .map(stringId -> Integer.parseInt(stringId));
+
+    // then
+    assertThat(ids).isEqualTo(ids0To100);
+  }
+
+  @Test
+  public void find_all_should_return_elements_in_insertion_order_for_Long_id() {
+    // given
+    InMemoryRepository<PojoLongId, Long> longIdRepo = new InMemoryRepository<>();
+    List<Long> ids0To100 = List.range((long)0, (long)100);
+    longIdRepo.saveAll(
+      ids0To100.map(i -> new PojoLongId())
+    );
+
+    // when
+    Iterable<PojoLongId> all = longIdRepo.findAll();
+    List<Long> ids = List.ofAll(all)
+      .map(pojo -> pojo._id);
+
+    // then
+    assertThat(ids).isEqualTo(ids0To100);
   }
 }
